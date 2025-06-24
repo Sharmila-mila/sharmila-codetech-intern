@@ -1,5 +1,3 @@
-TASK: MIGRATE DATA BETWEEN TWO DATABASES (MySQL → PostgreSQL) AND ENSURE DATA INTEGRITY
-
 # MIGRATION SCRIPTS
 # 1.Using pgloader (Recommended & automated)
 
