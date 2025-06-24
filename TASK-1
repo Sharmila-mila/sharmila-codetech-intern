@@ -1,0 +1,25 @@
+#create a tables 2 tales named as student and cources
+#table 1
+
+CREATE TABLE students (student_id INT,name VARCHAR(50),course_id INT);
+INSERT INTO students VALUES (1, 'Ravi', 101),(2, 'Priya', 102),(3, 'Karthik', NULL),(4, 'Aishwarya', 103);
+
+#table 2
+
+CREATE TABLE courses (course_id INT,course_name VARCHAR(50));
+INSERT INTO courses VALUES (101, 'Python'),(102, 'Java'),(104, 'Data Science');
+
+#code for inner join 
+
+SELECT s.student_id, s.name, c.course_name
+FROM students s INNER JOIN courses c ON s.course_id = c.course_id;
+
+#code for left join
+
+SELECT s.student_id, s.name, c.course_name
+FROM students s LEFT JOIN courses c ON s.course_id = c.course_id;
+
+#code for right join
+
+SELECT s.student_id, s.name, c.course_name
+FROM students s RIGHT JOIN courses c ON s.course_id = c.course_id;
