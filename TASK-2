@@ -1,4 +1,5 @@
-# Window functions
+# Window Functions
+
 SELECT 
   student_id,
   name,
@@ -7,6 +8,7 @@ SELECT
 FROM students;
 
 # Subqueries
+
 SELECT name
 FROM students
 WHERE course_id = (
@@ -14,6 +16,7 @@ WHERE course_id = (
 );
 
 #Common Table Expressions
+
 WITH student_courses AS (
   SELECT s.student_id, s.name, c.course_name
   FROM students s
@@ -24,6 +27,7 @@ FROM student_courses
 WHERE course_name IS NOT NULL;
 
 # Advance Data Analysis
+
 WITH course_counts AS (
   SELECT course_id, COUNT(*) AS student_count
   FROM students
