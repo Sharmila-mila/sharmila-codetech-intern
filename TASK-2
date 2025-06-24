@@ -1,1 +1,44 @@
+# Window functions
+SELECT 
+  student_id,
+  name,
+  course_id,
+  RANK() OVER (ORDER BY name) AS name_rank
+FROM students;
+
+# Subqueries
+SELECT name
+FROM students
+WHERE course_id = (
+  SELECT MAX(course_id) FROM courses
+);
+
+#Common Table Expressions
+WITH student_courses AS (
+  SELECT s.student_id, s.name, c.course_name
+  FROM students s
+  LEFT JOIN courses c ON s.course_id = c.course_id
+)
+SELECT *
+FROM student_courses
+WHERE course_name IS NOT NULL;
+
+# Advance Data Analysis
+WITH course_counts AS (
+  SELECT course_id, COUNT(*) AS student_count
+  FROM students
+  WHERE course_id IS NOT NULL
+  GROUP BY course_id
+),
+ranked_courses AS (
+  SELECT 
+    course_id,
+    student_count,
+    RANK() OVER (ORDER BY student_count DESC) AS rank_by_popularity
+  FROM course_counts
+)
+SELECT c.course_name, rc.student_count, rc.rank_by_popularity
+FROM ranked_courses rc
+JOIN courses c ON rc.course_id = c.course_id;
+
 
