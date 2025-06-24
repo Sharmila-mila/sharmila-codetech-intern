@@ -1,7 +1,44 @@
 # Export Schema and Data from MySQL
--- In MySQL
+
 SELECT * FROM students
 INTO OUTFILE '/tmp/students.csv'
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
+
+# Create Equivalent Schema in PostgreSQL
+
+CREATE TABLE students (
+  student_id INTEGER PRIMARY KEY,
+  name VARCHAR(50),
+  course_id INTEGER
+);
+
+CREATE TABLE courses (
+  course_id INTEGER PRIMARY KEY,
+  course_name VARCHAR(50)
+);
+
+# Import Data into PostgreSQL
+
+COPY students(student_id, name, course_id)
+FROM '/tmp/students.csv'
+DELIMITER ','
+CSV;
+
+# Ensure Data Integrity
+# A. Row Count Validation
+
+SELECT COUNT(*) FROM students;
+
+# B. Check for NULLs or corrupt data
+
+SELECT * FROM students WHERE name IS NULL;
+
+# Enforce Foreign Key Constraints (after import)
+
+ALTER TABLE students
+ADD CONSTRAINT fk_course
+FOREIGN KEY (course_id) REFERENCES courses(course_id);
+
+
 
