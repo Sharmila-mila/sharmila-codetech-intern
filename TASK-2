@@ -1,48 +1,59 @@
-# Window Functions
+# DATA MODEL USED
 
-SELECT 
-  student_id,
-  name,
-  course_id,
-  RANK() OVER (ORDER BY name) AS name_rank
-FROM students;
-
-# Subqueries
-
-SELECT name
-FROM students
-WHERE course_id = (
-  SELECT MAX(course_id) FROM courses
+CREATE TABLE sales (
+  sale_id INT,
+  customer_name VARCHAR(50),
+  region VARCHAR(50),
+  amount DECIMAL(10,2),
+  sale_date DATE
 );
 
-#Common Table Expressions
+-- Sample Data
+INSERT INTO sales VALUES
+(1, 'Arun', 'North', 1200.50, '2024-01-10'),
+(2, 'Priya', 'South', 850.00, '2024-01-11'),
+(3, 'Ravi', 'North', 650.00, '2024-01-12'),
+(4, 'Aishwarya', 'East', 2000.00, '2024-02-01'),
+(5, 'Karthik', 'South', 500.00, '2024-02-05'),
+(6, 'Priya', 'South', 700.00, '2024-02-20'),
+(7, 'Ravi', 'North', 1100.00, '2024-03-01');
 
-WITH student_courses AS (
-  SELECT s.student_id, s.name, c.course_name
-  FROM students s
-  LEFT JOIN courses c ON s.course_id = c.course_id
+# SQL ANALYSIS: Queries with Insights
+#  1. Window Function – Running Total per Region
+
+SELECT
+  sale_id,
+  customer_name,
+  region,
+  amount,
+  sale_date,
+  SUM(amount) OVER (PARTITION BY region ORDER BY sale_date) AS running_total_region
+FROM sales;
+
+# 2. Subquery – Top Sale per Customer
+
+SELECT customer_name, amount, sale_date
+FROM sales
+WHERE (customer_name, amount) IN (
+  SELECT customer_name, MAX(amount)
+  FROM sales
+  GROUP BY customer_name
+);
+
+# 3. CTE – Monthly Regional Sales Trend
+
+WITH monthly_sales AS (
+  SELECT
+    region,
+    DATE_TRUNC('month', sale_date) AS sale_month,
+    SUM(amount) AS total_sales
+  FROM sales
+  GROUP BY region, sale_month
 )
 SELECT *
-FROM student_courses
-WHERE course_name IS NOT NULL;
+FROM monthly_sales
+ORDER BY sale_month, region;
 
-# Advance Data Analysis
 
-WITH course_counts AS (
-  SELECT course_id, COUNT(*) AS student_count
-  FROM students
-  WHERE course_id IS NOT NULL
-  GROUP BY course_id
-),
-ranked_courses AS (
-  SELECT 
-    course_id,
-    student_count,
-    RANK() OVER (ORDER BY student_count DESC) AS rank_by_popularity
-  FROM course_counts
-)
-SELECT c.course_name, rc.student_count, rc.rank_by_popularity
-FROM ranked_courses rc
-JOIN courses c ON rc.course_id = c.course_id;
 
 
