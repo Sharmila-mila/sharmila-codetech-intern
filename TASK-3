@@ -1,1 +1,7 @@
+# Export Schema and Data from MySQL
+-- In MySQL
+SELECT * FROM students
+INTO OUTFILE '/tmp/students.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
 
