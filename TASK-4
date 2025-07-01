@@ -1,1 +1,32 @@
 
+Backup SQL
+
+-- Full database backup
+BACKUP DATABASE AdventureWorks
+TO DISK = 'C:\Backup\AdventureWorks_Full.bak'
+WITH FORMAT, INIT, NAME = 'Full Backup of AdventureWorks';
+
+
+Restore SQL (if there’s a failure)
+
+-- Restore the database from backup
+RESTORE DATABASE AdventureWorks
+FROM DISK = 'C:\Backup\AdventureWorks_Full.bak'
+WITH REPLACE;
+
+Backup Script
+
+-- Create full backup of the database
+BACKUP DATABASE AdventureWorks
+TO DISK = 'C:\Backup\AdventureWorks_Full.bak'
+WITH FORMAT, INIT,
+NAME = 'Full Backup of AdventureWorks',
+SKIP, NOREWIND, NOUNLOAD, STATS = 10;
+
+
+Restore Script
+
+-- Restore full backup (overwrites existing database)
+RESTORE DATABASE AdventureWorks
+FROM DISK = 'C:\Backup\AdventureWorks_Full.bak'
+WITH REPLACE,RECOVERY,STATS = 10;
